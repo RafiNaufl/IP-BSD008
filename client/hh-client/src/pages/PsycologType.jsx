@@ -40,7 +40,7 @@ const ServiceOptions = () => {
               <Card.Body>
                 <Card.Title>Konseling Offline</Card.Title>
                 <Card.Text>
-                  Bertemu langsung dan ceritakan masalah ke Psikolog
+                  Bertemu langsung dan ceritakan masalah ke Konselor
                 </Card.Text>
                 <Button onClick={() => handlePilihLayanan()} variant="warning">
                   Jadwalkan Sekarang

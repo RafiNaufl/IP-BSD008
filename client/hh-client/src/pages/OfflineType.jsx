@@ -17,9 +17,9 @@ const ReservationForm = () => {
     psychologistId: "",
     session_count: 1,
   });
+  const [topic, setTopics] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [topic, setTopics] = useState([]);
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -30,8 +30,8 @@ const ReservationForm = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log(response.data);
-        setTopics(response.data);
+        // console.log(response.data.top÷ic, "<<<<<<<<<<<<<");
+        setTopics(response.data.topic);
       } catch (error) {
         console.error("Error fetching topics:", error);
         // Handle error
@@ -245,8 +245,7 @@ const ReservationForm = () => {
 
                   <Form.Group className="mb-3" controlId="topicId">
                     <Form.Label>Topic</Form.Label>
-                    <Form.Control
-                      as="select"
+                    <Form.Select
                       name="topicId"
                       value={formData.topicId}
                       onChange={handleChange}
@@ -258,7 +257,7 @@ const ReservationForm = () => {
                             {topic.topic_name}
                           </option>
                         ))}
-                    </Form.Control>
+                    </Form.Select>
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="psychologistId">

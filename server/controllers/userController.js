@@ -113,6 +113,22 @@ class userController {
       next(error);
     }
   }
+  static async readUserbyName(req, res, next) {
+    try {
+      const userId = req.user.id;
+
+      // console.log(userId);
+
+      const user = await User.findByPk(userId);
+
+      res.status(200).json({
+        message: "Berhasil baca data",
+        user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   static async readUserById(req, res, next) {
     try {
       const { userId } = req.user.id;

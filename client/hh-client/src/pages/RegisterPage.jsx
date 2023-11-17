@@ -4,9 +4,13 @@ import axios from "axios";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 
-function SignIn() {
+function SignUp() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -19,7 +23,7 @@ function SignIn() {
     const { username, email, password } = formData;
 
     if (!username || !email || !password) {
-      setError(" Username, email and password are required");
+      setError("Username, email, and password are required");
       return;
     }
 
@@ -27,19 +31,61 @@ function SignIn() {
       await axios.post("http://localhost:3000/register", formData);
       Swal.fire({
         title: "Success!",
-        text: "You are now redirect to sign in.",
+        text: "Registration successful. Redirecting to sign in.",
         icon: "success",
-        confirmButtonText: "OK",
+        confirmButtonText: "Login",
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");
         }
       });
-    } catch (error) {
-      setError(error?.response?.data?.message || "Failed to register");
-      console.error("Login error:", error);
+    } catch (err) {
+      setError(err?.response?.data?.message || "Failed to register");
+      console.error("Registration error:", err);
     }
   };
+
+  async function handleCredentialResponse(response) {
+    console.log("Encoded JWT ID token: " + response.credential);
+    try {
+      const googleToken = response.credential;
+      const backendResponse = await axios.post(
+        "http://localhost:3000/google-auth",
+        null,
+        { headers: { token: googleToken } }
+      );
+      localStorage.setItem("access_token", backendResponse.data.access_token);
+      Swal.fire({
+        title: "Success!",
+        text: "You are now logged in.",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/dashboard");
+        }
+      });
+    } catch (error) {
+      setError("Failed to login with Google");
+      console.error("Error during Google authentication:", error);
+    }
+  }
+
+  useEffect(() => {
+    window.google.accounts.id.initialize({
+      client_id:
+        "226534053064-4mj0q9ks32c5q1nel23o9da90jkka735.apps.googleusercontent.com",
+      callback: handleCredentialResponse,
+    });
+    window.google.accounts.id.renderButton(
+      document.getElementById("buttonDiv"),
+      {
+        theme: "outline",
+        size: "large",
+      }
+    );
+    window.google.accounts.id.prompt();
+  }, []);
 
   return (
     <Container className="mt-5">
@@ -117,4 +163,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignUp;

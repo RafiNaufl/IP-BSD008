@@ -1,27 +1,33 @@
 import { useState, useEffect } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import Logo from "../assets/logohh.png";
 import { useNavigate } from "react-router-dom";
+import Logo from "../assets/logohh.png";
 import axios from "axios";
 
 const NavbarComponent = () => {
-  const [changeColor, setChangeColor] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState({});
+  const [changeColor, setChangeColor] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
       const accessToken = localStorage.getItem("access_token");
       if (accessToken) {
         try {
-          const response = await axios.get("http://localhost:3000/user", {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          });
-          console.log(response.data);
-          setUser(response.data); // Assuming the response contains the user data
+          const response = await axios.get(
+            "http://localhost:3000/profile/name",
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+
+          // Periksa apakah data pengguna ada dalam respons
+          console.log(response);
+          if (response.data && response.data.user) {
+            setUser(response.data.user);
+          }
         } catch (error) {
           console.error("Error fetching user data:", error);
-          // Handle error, maybe clear the token or navigate to login
         }
       }
     };
@@ -92,7 +98,8 @@ const NavbarComponent = () => {
             ></Nav>
             <div className="text-center">
               <NavDropdown
-                title={`Hi, ${user.username}!`}
+                key={user.id}
+                title={`Hi, ${user.username}`}
                 id="basic-nav-dropdown"
                 className="btn btn-outline-warning"
               >

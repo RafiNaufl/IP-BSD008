@@ -1,6 +1,7 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
 import Parent from "../pages/Parent";
 import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 import Dashboard from "../pages/Dashboard";
 import HomePage from "../pages/HomePage";
 import PsycologType from "../pages/PsycologType";
@@ -19,6 +20,13 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    loader: async () => {
+      return isAuthenticated() ? redirect("/dashboard") : null;
+    },
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
     loader: async () => {
       return isAuthenticated() ? redirect("/dashboard") : null;
     },
