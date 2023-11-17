@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { googleLogout } from "@react-oauth/google";
 import Logo from "../assets/logohh.png";
 import axios from "axios";
 
-const NavbarComponent = () => {
+const NavbarUserComponent = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [changeColor, setChangeColor] = useState(false);
@@ -39,6 +40,7 @@ const NavbarComponent = () => {
     try {
       // Hapus token akses dari penyimpanan lokal
       localStorage.removeItem("access_token");
+      googleLogout();
 
       // Arahkan pengguna ke halaman login atau halaman lain yang sesuai
       navigate("/");
@@ -117,4 +119,4 @@ const NavbarComponent = () => {
   );
 };
 
-export default NavbarComponent;
+export default NavbarUserComponent;

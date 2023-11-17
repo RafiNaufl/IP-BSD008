@@ -1,4 +1,10 @@
-const { Reservation, Psychologist, User, Topic } = require("../models");
+const {
+  Reservation,
+  Psychologist,
+  User,
+  Topic,
+  Payment,
+} = require("../models");
 const { sendEmailReservation } = require("../api/nodeMailer");
 
 class reservationController {
@@ -32,27 +38,32 @@ class reservationController {
         psychologistId,
       });
 
-      if (newReservation) {
-        const successMessage = `Terima kasih ${user.username} telah Reservasi Layanan Hacktiv Health. 
-        Berikut detail reservasi anda :
-        Topic : ${topic.topic_name},
-        Konselor : ${psychologist.name}
-        Date : ${date},
-        Time : ${time},
-        Duration: ${duration} jam,
-        Meeting Type : ${meetingType},
-        Keluhan : ${description},
-        `;
+      // if (newReservation) {
+      //   const successMessage = `Terima kasih ${user.username} telah Reservasi Layanan Hacktiv Health.
+      //   ===============================
+      //   Berikut detail reservasi anda :
 
-        sendEmailReservation(user.email, "Reservasi Berhasil", successMessage);
+      //   Topic : ${topic.topic_name},
+      //   Konselor : ${psychologist.name}
+      //   Date : ${date},
+      //   Time : ${time},
+      //   Duration: ${duration} jam,
+      //   Meeting Type : ${meetingType},
+      //   Keluhan : ${description}
+      //   ==============================
 
-        res.status(201).json({
-          message: "Reservation created successfully",
-          reservation: newReservation,
-        });
-      } else {
-        throw { message: "RegisterError" };
-      }
+      //   Terima kasih :)
+      //   `;
+
+      //   sendEmailReservation(user.email, "Reservasi Berhasil", successMessage);
+
+      res.status(201).json({
+        message: "Reservation created successfully",
+        reservation: newReservation,
+      });
+      // } else {
+      //   throw { message: "RegisterError" };
+      // }
     } catch (error) {
       console.log(error);
       next(error);
