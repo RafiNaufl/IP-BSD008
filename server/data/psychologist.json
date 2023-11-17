@@ -1,0 +1,43 @@
+[
+    {
+      "name": "Dr. Saras",
+      "specialization": "Counseling Psychology",
+      "hourly_rate": 15000,
+      "availability": "Tersedia",
+      "email": "drsaras@gmail.com",
+      "photoImage": "null"
+    },
+    {
+      "name": "Dr. Niken",
+      "specialization": "Relationship Psychology",
+      "hourly_rate": 10000,
+      "availability": "Tidak Tersedia",
+      "email": "drniken@gmail.com",
+      "photoImage": "null"
+    },
+    {
+      "name": "Dr. Taufik",
+      "specialization": "Educational Psychology",
+      "hourly_rate": 10000,
+      "availability": "Tersedia",
+      "email": "drtaufik@gmail.com",
+      "photoImage": "null"
+    },
+    {
+      "name": "Dr. Dzul",
+      "specialization": "Social Psychology",
+      "hourly_rate": 10000,
+      "availability": "Tidak Tersedia",
+      "email": "drdzul@gmail.com",
+      "photoImage": "null"
+    },
+    {
+      "name": "Test",
+      "specialization": "Social Psychology",
+      "hourly_rate": 10000,
+      "availability": "Tersedia",
+      "email": "naufalrafi27@gmail.com",
+      "photoImage": "null"
+    }
+  ]
+  
