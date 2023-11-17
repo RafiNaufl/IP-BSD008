@@ -12,6 +12,7 @@ router.get("/user", userController.readUser);
 router.get("/user/:id", userController.readUserById);
 router.post("/profile", middlewaresUpload, userController.createProfile);
 router.get("/profile", userController.readProfile);
+router.get("/profile/name", userController.readUserbyName);
 router.get("/profile/:id", userController.readProfileById);
 router.put("/profile/:id", userController.updateProfile);
 
