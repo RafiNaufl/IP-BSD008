@@ -92,14 +92,26 @@ const ReservationForm = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}. Please try again later.</p>;
 
+  const formatDate = (date) => {
+    let d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  };
+
   return (
     <div
       className="d-flex justify-content-center align-items-center"
       style={{ paddingTop: 100, paddingBottom: 100 }}
     >
-      <Container>
+      <Container className="md-5">
         <Row>
-          <Col md={8} lg={6} xl={4} className="mx-auto">
+          <Col md={12} lg={10} xl={8} className="mx-auto">
             <h1>Create Reservation</h1>
             <div className="card">
               <div className="card-body">
@@ -107,44 +119,13 @@ const ReservationForm = () => {
                   {/* Date Selection */}
                   <Form.Group className="mb-3" controlId="date">
                     <Form.Label>Select Date</Form.Label>
-                    <div>
-                      <Button
-                        variant={
-                          formData.date === "2023-11-20"
-                            ? "primary"
-                            : "outline-primary"
-                        }
-                        onClick={() =>
-                          handleTimeSelection("date", "2023-11-20")
-                        }
-                      >
-                        20 November 2023
-                      </Button>{" "}
-                      <Button
-                        variant={
-                          formData.date === "2023-11-21"
-                            ? "primary"
-                            : "outline-primary"
-                        }
-                        onClick={() =>
-                          handleTimeSelection("date", "2023-11-21")
-                        }
-                      >
-                        21 November 2023
-                      </Button>{" "}
-                      <Button
-                        variant={
-                          formData.date === "2023-11-22"
-                            ? "primary"
-                            : "outline-primary"
-                        }
-                        onClick={() =>
-                          handleTimeSelection("date", "2023-11-22")
-                        }
-                      >
-                        22 November 2023
-                      </Button>{" "}
-                    </div>
+                    <Form.Control
+                      type="date"
+                      name="date"
+                      value={formData.date}
+                      onChange={handleChange}
+                      min={formatDate(new Date())}
+                    />
                   </Form.Group>
 
                   {/* Time Selection */}
@@ -152,30 +133,33 @@ const ReservationForm = () => {
                     <Form.Label>Select Time</Form.Label>
                     <div>
                       <Button
+                        style={{ marginRight: 5 }}
                         variant={
                           formData.time === "10:00"
-                            ? "primary"
-                            : "outline-primary"
+                            ? "warning"
+                            : "outline-warning"
                         }
                         onClick={() => handleTimeSelection("time", "10:00")}
                       >
                         10:00 AM
                       </Button>{" "}
                       <Button
+                        style={{ marginRight: 5 }}
                         variant={
                           formData.time === "13:00"
-                            ? "primary"
-                            : "outline-primary"
+                            ? "warning"
+                            : "outline-warning"
                         }
                         onClick={() => handleTimeSelection("time", "13:00")}
                       >
                         1:00 PM
                       </Button>{" "}
                       <Button
+                        style={{ marginRight: 5 }}
                         variant={
                           formData.time === "16:00"
-                            ? "primary"
-                            : "outline-primary"
+                            ? "warning"
+                            : "outline-warning"
                         }
                         onClick={() => handleTimeSelection("time", "16:00")}
                       >
@@ -189,30 +173,33 @@ const ReservationForm = () => {
                     <Form.Label>Select Duration</Form.Label>
                     <div>
                       <Button
+                        style={{ marginRight: 5 }}
                         variant={
                           formData.duration === "1"
-                            ? "primary"
-                            : "outline-primary"
+                            ? "warning"
+                            : "outline-warning"
                         }
                         onClick={() => handleTimeSelection("duration", "1")}
                       >
                         1 Hour
                       </Button>{" "}
                       <Button
+                        style={{ marginRight: 5 }}
                         variant={
                           formData.duration === "2"
-                            ? "primary"
-                            : "outline-primary"
+                            ? "warning"
+                            : "outline-warning"
                         }
                         onClick={() => handleTimeSelection("duration", "2")}
                       >
                         2 Hours
                       </Button>{" "}
                       <Button
+                        style={{ marginRight: 5 }}
                         variant={
                           formData.duration === "3"
-                            ? "primary"
-                            : "outline-primary"
+                            ? "warning"
+                            : "outline-warning"
                         }
                         onClick={() => handleTimeSelection("duration", "3")}
                       >
@@ -269,7 +256,7 @@ const ReservationForm = () => {
                       onChange={handleChange}
                     />
                   </Form.Group>
-                  <Button variant="primary" type="submit">
+                  <Button variant="warning" type="submit">
                     Make Reservation
                   </Button>
                 </Form>

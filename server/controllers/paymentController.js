@@ -66,7 +66,7 @@ class PaymentController {
 
       await payment.update({ payment_status: "paid" });
 
-      if (payment.payment_status === "paid") {
+      if (payment.payment_status === "pending") {
         const user = await User.findByPk(userId);
         const psychologist = reservation.psychologist;
 
@@ -78,8 +78,21 @@ class PaymentController {
           Permasalahan: ${reservation.description}
         `;
 
-        const userMessage = `Terima kasih ${user.username} atas pembayaran Anda! Berikut adalah detail reservasi Anda:
-          ${reservationDetails}
+        const userMessage = `Terima kasih ${user.username} telah Reservasi Layanan Hacktiv Health! Berikut adalah detail reservasi anda dan jumlah yang harus di bayarkan untuk melanjutkan reservasi anda:
+        
+        =================================  
+
+        ${reservationDetails}
+
+        =================================
+
+        Jumlah yang harus di bayarkan : 
+        
+        Rp. ${totalPaymentAmount}
+
+        Terima Kasih Banyak!
+
+        =================================
         `;
 
         const psychologistMessage = `Pengguna dengan username ${user.username} telah melakukan reservasi untuk konseling. Berikut detailnya:
