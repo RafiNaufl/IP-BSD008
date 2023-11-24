@@ -93,6 +93,28 @@ class reservationController {
       next(error);
     }
   }
+
+  static async getUserReservation(req, res, next) {
+    try {
+      const userId = req.user.id;
+
+      const reservations = await Reservation.findAll({
+        where: { userId },
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["username", "email"],
+          },
+        ],
+      });
+
+      res.status(200).json({ reservations });
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 }
 
 module.exports = reservationController;
