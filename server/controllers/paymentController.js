@@ -64,7 +64,7 @@ class PaymentController {
 
       const token = await snap.createTransaction(parameter);
 
-      await payment.update({ payment_status: "paid" });
+      // await payment.update({ payment_status: "paid" });
 
       if (payment.payment_status === "pending") {
         const user = await User.findByPk(userId);
@@ -72,7 +72,7 @@ class PaymentController {
 
         const reservationDetails = `Detail Reservasi:'
           Konselor: ${reservation.psychologist.name}
-          Tanggal: ${reservation.date_time.toISOString().split("T")[0]}
+          Tanggal: ${reservation.date_time}
           Durasi: ${reservation.duration} jam
           Topik: ${reservation.topic.topic_name}
           Permasalahan: ${reservation.description}

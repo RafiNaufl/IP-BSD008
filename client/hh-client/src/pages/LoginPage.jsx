@@ -20,6 +20,24 @@ function SignIn() {
 
     if (!email || !password) {
       setError("Both email and password are required");
+      Swal.fire({
+        title: "Error!",
+        text: "Both email and password are required",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please provide a valid email address");
+      Swal.fire({
+        title: "Error!",
+        text: "Please provide a valid email address",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
       return;
     }
 
@@ -29,7 +47,6 @@ function SignIn() {
         formData
       );
       localStorage.setItem("access_token", response.data.access_token);
-      // Display success alert
       Swal.fire({
         title: "Success!",
         text: "You are now logged in.",
@@ -42,6 +59,12 @@ function SignIn() {
       });
     } catch (error) {
       setError(error?.response?.data?.message || "Failed to login");
+      Swal.fire({
+        title: "Error!",
+        text: error?.response?.data?.message || "Failed to login",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
       console.error("Login error:", error);
     }
   };
@@ -101,7 +124,6 @@ function SignIn() {
                     <p className="text-center mb-4">
                       belum punya akun?<a href="/register"> Register</a>{" "}
                     </p>
-                    {error && <div className="alert alert-danger">{error}</div>}
                     <Form onSubmit={handleSubmit} className="w-75">
                       <Form.Group className="mb-3">
                         <Form.Label>Email</Form.Label>

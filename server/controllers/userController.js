@@ -40,53 +40,55 @@ class userController {
     try {
       const { username, email, password } = req.body;
 
-      const newUser = await User.create({
-        username,
-        email,
-        password,
-      });
-
-      if (newUser) {
-        const successMessage = `Terima kasih ${username} telah mendaftar di Hacktiv Health! Solusi Terbaik Kembalikan Senyum Bahagiamu. Have a Great Day! :)
-        `;
-
-        sendEmailRegistration(
-          newUser.email,
-          "Registrasi Berhasil",
-          successMessage
-        );
-
-        res.status(201).json({
-          message: "Berhasil menambahkan user!",
-          newUser: {
-            id: newUser.id,
-            email: newUser.email,
-          },
-        });
-      } else {
-        throw { message: "RegisterError" };
+      // Validate input
+      if (!username || !email || !password) {
+        return res.status(400).json({ message: "Semua field harus diisi" });
       }
+
+      // Check for existing user
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(409).json({ message: "Email already exists" });
+      }
+
+      // Create new user
+      const newUser = await User.create({ username, email, password });
+
+      // Send registration email
+      const successMessage = `Welcome ${username}!`;
+      sendEmailRegistration(email, "Welcome to Our Service!", successMessage);
+
+      res.status(201).json({
+        message: "Berhasil menambahkan user!",
+        newUser: {
+          id: newUser.id,
+          email: newUser.email,
+        },
+      });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
+
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
+
       if (!email || !password) {
-        throw { message: "LoginError" };
+        return res
+          .status(400)
+          .json({ message: "Email dan password harus diisi" });
       }
+
       const user = await User.findOne({ where: { email } });
 
       if (!user) {
-        throw { message: "NotFound" };
+        return res.status(404).json({ message: "Email tidak ditemukan" });
       }
 
       const isValidPassword = compareHash(password, user.password);
-
       if (!isValidPassword) {
-        throw { message: "PasswordError" };
+        return res.status(401).json({ message: "Password salah" });
       }
 
       const access_token = signToken({ id: user.id });
@@ -96,10 +98,10 @@ class userController {
         access_token,
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
+
   // User Controller
   static async readUser(req, res, next) {
     try {
