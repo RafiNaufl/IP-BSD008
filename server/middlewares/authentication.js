@@ -15,6 +15,7 @@ async function authentication(req, res, next) {
     // 5. simpan data user kedalam object request
     req.user = {
       id: user.id,
+      userId: user.id,
       email: user.email,
       username: user.username,
     };

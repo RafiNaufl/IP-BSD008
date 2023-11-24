@@ -5,5 +5,6 @@ const authentication = require("../middlewares/authentication");
 
 router.use(authentication);
 router.post("/", reservationController.createReservation);
+router.get("/:id", reservationController.getUserReservation);
 
 module.exports = router;

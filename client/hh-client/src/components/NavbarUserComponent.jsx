@@ -94,10 +94,9 @@ const NavbarUserComponent = () => {
           </h3>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav
-              className="mx-auto text-center"
-              style={{ paddingTop: 10 }}
-            ></Nav>
+            <Nav className="mx-auto text-center" style={{ paddingTop: 10 }}>
+              <Nav.Link href="/dashboard/reservations">Reservations</Nav.Link>
+            </Nav>
             <div className="text-center">
               <NavDropdown
                 key={user.id}

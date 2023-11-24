@@ -6,6 +6,7 @@ import Dashboard from "../pages/Dashboard";
 import HomePage from "../pages/HomePage";
 import PsycologType from "../pages/PsycologType";
 import OfflineType from "../pages/OfflineType";
+import Reservations from "../pages/Reservation";
 
 const isAuthenticated = () => !!localStorage.access_token;
 
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/psycolog-type/offline-type",
         element: <OfflineType />,
+      },
+      {
+        path: "/dashboard/reservations",
+        element: <Reservations />,
       },
     ],
   },
