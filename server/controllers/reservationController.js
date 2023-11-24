@@ -5,7 +5,10 @@ const {
   Topic,
   Payment,
 } = require("../models");
-const { sendEmailReservation } = require("../api/nodeMailer");
+const {
+  sendEmailReservation,
+  sendEmailToPsychologist,
+} = require("../api/nodeMailer");
 
 class reservationController {
   static async createReservation(req, res, next) {
@@ -38,32 +41,53 @@ class reservationController {
         psychologistId,
       });
 
-      // if (newReservation) {
-      //   const successMessage = `Terima kasih ${user.username} telah Reservasi Layanan Hacktiv Health.
-      //   ===============================
-      //   Berikut detail reservasi anda :
+      if (newReservation) {
+        const successMessage = `Terima kasih ${user.username} telah Reservasi Layanan Hacktiv Health.
+        ===============================
+        Berikut detail reservasi :
 
-      //   Topic : ${topic.topic_name},
-      //   Konselor : ${psychologist.name}
-      //   Date : ${date},
-      //   Time : ${time},
-      //   Duration: ${duration} jam,
-      //   Meeting Type : ${meetingType},
-      //   Keluhan : ${description}
-      //   ==============================
+        Topic : ${topic.topic_name},
+        Konselor : ${psychologist.name}
+        Date : ${date},
+        Time : ${time},
+        Duration: ${duration} jam,
+        Meeting Type : ${meetingType},
+        Keluhan : ${description}
+        ==============================
 
-      //   Terima kasih :)
-      //   `;
+        Terima kasih :)
+        `;
 
-      //   sendEmailReservation(user.email, "Reservasi Berhasil", successMessage);
+        const successMessageKonselor = `Hai, ${psychologist.name} anda telah menerima Reservasi Layanan Hacktiv Health.
+        ===============================
+        Berikut detail reservasi :
 
-      res.status(201).json({
-        message: "Reservation created successfully",
-        reservation: newReservation,
-      });
-      // } else {
-      //   throw { message: "RegisterError" };
-      // }
+        Topic : ${topic.topic_name},
+        Pasien : ${user.username}
+        Date : ${date},
+        Time : ${time},
+        Duration: ${duration} jam,
+        Meeting Type : ${meetingType},
+        Keluhan : ${description}
+        ==============================
+
+        Terima kasih :)
+        `;
+
+        sendEmailReservation(user.email, "Reservasi Berhasil", successMessage);
+        sendEmailToPsychologist(
+          psychologist.email,
+          "Anda Menerima Reservasi Baru",
+          successMessageKonselor
+        );
+
+        res.status(201).json({
+          message: "Reservation created successfully",
+          reservation: newReservation,
+        });
+      } else {
+        throw { message: "RegisterError" };
+      }
     } catch (error) {
       console.log(error);
       next(error);

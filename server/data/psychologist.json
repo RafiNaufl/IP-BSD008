@@ -4,14 +4,14 @@
       "specialization": "Counseling Psychology",
       "hourly_rate": 15000,
       "availability": "Tersedia",
-      "email": "drsaras@gmail.com",
+      "email": "asaraswati@hacktiv8.com",
       "photoImage": "null"
     },
     {
       "name": "Dr. Niken",
       "specialization": "Relationship Psychology",
       "hourly_rate": 10000,
-      "availability": "Tidak Tersedia",
+      "availability": "Tersedia",
       "email": "drniken@gmail.com",
       "photoImage": "null"
     },
@@ -27,7 +27,7 @@
       "name": "Dr. Dzul",
       "specialization": "Social Psychology",
       "hourly_rate": 10000,
-      "availability": "Tidak Tersedia",
+      "availability": "Tersedia",
       "email": "drdzul@gmail.com",
       "photoImage": "null"
     },

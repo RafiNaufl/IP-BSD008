@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Container, Form, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Container,
+  Form,
+  Button,
+  Modal,
+  Card,
+} from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -18,8 +26,11 @@ const ReservationForm = () => {
     session_count: 1,
   });
   const [topic, setTopics] = useState([]);
+  const [konselor, setKonselor] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showKonselorModal, setShowKonselorModal] = useState(false);
+  const [selectedKonselor, setSelectedKonselor] = useState(null);
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -30,15 +41,41 @@ const ReservationForm = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        // console.log(response.data.top÷ic, "<<<<<<<<<<<<<");
         setTopics(response.data.topic);
       } catch (error) {
-        console.error("Error fetching topics:", error);
-        // Handle error
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to fetch topics. Please try again later.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       }
     };
 
     fetchTopics();
+  }, []);
+
+  useEffect(() => {
+    const fetchKonselor = async () => {
+      try {
+        const accessToken = localStorage.getItem("access_token");
+        const response = await axios.get("http://localhost:3000/konselor", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setKonselor(response.data.konselors);
+      } catch (error) {
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to fetch konselors. Please try again later.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    };
+
+    fetchKonselor();
   }, []);
 
   const handleChange = (e) => {
@@ -47,6 +84,22 @@ const ReservationForm = () => {
 
   const handleTimeSelection = (field, value) => {
     setFormData({ ...formData, [field]: value });
+  };
+
+  const handleSubmitWithKonselor = async () => {
+    if (!selectedKonselor) {
+      // Tampilkan pesan kesalahan jika konselor belum dipilih
+      Swal.fire({
+        title: "Error!",
+        text: "Please choose a psychologist before making a reservation.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    // Lanjutkan dengan membuat reservasi dengan konselor yang dipilih
+    handleSubmit();
   };
 
   const handleSubmit = async (e) => {
@@ -63,9 +116,7 @@ const ReservationForm = () => {
           },
         }
       );
-      console.log(response.data);
 
-      // Show SweetAlert on success
       Swal.fire({
         title: "Success!",
         text: "Reservation created successfully",
@@ -73,24 +124,21 @@ const ReservationForm = () => {
         confirmButtonText: "Go to Payment",
       }).then((result) => {
         if (result.isConfirmed) {
-          // Redirect to payment page
           navigate("/payment");
         }
       });
     } catch (error) {
       setError(error);
-      console.error(
-        "Error creating reservation:",
-        error.response?.data?.message
-      );
-      // Optionally, you can also use SweetAlert to show error message
+      Swal.fire({
+        title: "Error!",
+        text: error.response?.data?.message || "Failed to create reservation",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     } finally {
       setIsLoading(false);
     }
   };
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}. Please try again later.</p>;
 
   const formatDate = (date) => {
     let d = new Date(date),
@@ -247,16 +295,20 @@ const ReservationForm = () => {
                     </Form.Select>
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="psychologistId">
-                    <Form.Label>Psychologist ID</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="psychologistId"
-                      value={formData.psychologistId}
-                      onChange={handleChange}
-                    />
+                  <Form.Group className="mb-3" controlId="topicId">
+                    <Button
+                      variant="primary"
+                      onClick={() => setShowKonselorModal(true)}
+                      className="mb-2"
+                    >
+                      Choose Psychologist
+                    </Button>
+                    {selectedKonselor && (
+                      <p>Selected Psychologist: {selectedKonselor.name}</p>
+                    )}
                   </Form.Group>
-                  <Button variant="warning" type="submit">
+
+                  <Button variant="warning" onClick={handleSubmitWithKonselor}>
                     Make Reservation
                   </Button>
                 </Form>
@@ -265,6 +317,77 @@ const ReservationForm = () => {
           </Col>
         </Row>
       </Container>
+
+      {/* Modal for Choosing Psychologist */}
+      <Modal
+        show={showKonselorModal}
+        onHide={() => setShowKonselorModal(false)}
+        size="xl"
+        className="d-flex justify-content-center align-items-center"
+        style={{ paddingTop: 500 }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Choose a Psychologist</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            {Array.isArray(konselor) &&
+              konselor.map((konselor) => (
+                <Col md={3} key={konselor.id}>
+                  <Card
+                    style={{
+                      cursor: "pointer",
+                      height: 450,
+                    }}
+                    onClick={() => setSelectedKonselor(konselor)}
+                    className="mb-3"
+                  >
+                    <Card.Img
+                      variant="top"
+                      src={konselor.photoImage}
+                      alt={konselor.name}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        maxHeight: "250px",
+                      }}
+                    />
+                    <Card.Body>
+                      <Card.Title>{konselor.name}</Card.Title>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        Specialization: {konselor.specialization}
+                      </Card.Subtitle>
+                      <Card.Text>
+                        Hourly Rate: {konselor.hourly_rate}
+                        <br />
+                        Availability: {konselor.availability}
+                        <br />
+                        Email: {konselor.email}
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowKonselorModal(false)}
+          >
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setShowKonselorModal(false);
+              handleSubmitWithKonselor();
+            }}
+          >
+            Pilih Konselor
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -7,16 +7,16 @@
     "dialect": "postgres"
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "postgres",
+    "password": "270900",
+    "database": "IP_Rafi_Test",
+    "host": "localhost",
+    "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
     "password": "270900",
-    "database": "IP_Rafi",
+    "database": "IP_Rafi_Prod",
     "host": "localhost",
     "dialect": "postgres"
   }
